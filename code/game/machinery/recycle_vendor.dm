@@ -18,7 +18,7 @@
 		MATERIAL_BIOMATTER)
 
 
-/obj/machinery/ars_siloLateInitialize()
+/obj/machinery/ars_silo/LateInitialize()
 	. = ..()
 	update_icon()
 	var/area/areatocheck = get_area(src)
