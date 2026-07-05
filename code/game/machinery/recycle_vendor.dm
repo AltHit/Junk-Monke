@@ -17,9 +17,20 @@
 		MATERIAL_WOOD,
 		MATERIAL_BIOMATTER)
 
+/obj/machinery/ars_silo/New()
+	..()
+	if(!active_SILO)
+		active_SILO = src
+		return
+	//[!] get other silo position here!!!!
+
+/obj/machinery/ars_silo/Destroy()
+	..()
+	if(src == active_SILO)
+		active_SILO = null
 
 /obj/machinery/ars_silo/LateInitialize()
-	. = ..()
+	..()
 	update_icon()
 	var/area/areatocheck = get_area(src)
 	if(areatocheck.vessel != "CEV Eris")
@@ -27,7 +38,7 @@
 
 
 
-/obj/machinery/ars_siloattackby(obj/item/I, mob/living/user)
+/obj/machinery/ars_silo/attackby(obj/item/I, mob/living/user)
 	if(user.incapacitated())
 		return
 	if(BITTEST(wire_flags, WIRE_SHOCK) && shock(user, 100))
@@ -37,7 +48,23 @@
 		if(/obj/item/spacecash/)
 			inserted_money += I.worth
 			qdel(I)
+			return
 		if(/obj/item/stack/material/)
+			if(I in materials_blacklist)
+				to_chat(user, span_warning("THIS MATERIAL IS BANNED!"))
+				return
+				//bad red visual for vendor here
+			//add material
+
+	if(I.use_tool(user, src, WORKTIME_FAST, QUALITY_BOLT_TURNING, FAILCHANCE_EASY, required_stat = STAT_MEC))
+		anchored = !anchored
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		user.visible_message( \
+			span_notice("\The [user] unfastens \the [src]."), \
+			span_notice("You have unfastened \the [src]."), \
+			"You hear a ratchet.")
+		return
+
 
 
 
