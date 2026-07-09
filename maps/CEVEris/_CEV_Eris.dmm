@@ -99415,7 +99415,7 @@
 /turf/floor/tiled/white/golden,
 /area/eris/neotheology/bioprinter)
 "jrc" = (
-/obj/machinery/amesilo,
+/obj/machinery/ars_silo/,
 /turf/floor/tiled/steel/cargo,
 /area/eris/quartermaster/hangarsupply)
 "jsu" = (

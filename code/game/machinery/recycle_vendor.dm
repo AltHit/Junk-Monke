@@ -212,81 +212,6 @@ var/global/list/active_RSS
 	flick("recycle_vend", src)
 	update_icon()
 
-
-/obj/machinery/amerecycler/emag_act(remaining_charges, mob/user, emag_source)
-	. = ..()
-	to_chat(user, span_notice("[src]'s display flashes red."))
-	update_icon()
-
-/obj/machinery/amerecycler/proc/evaluate_stored_item(obj/evaluated)
-	var/valueofitem = 0
-	var/list/matter_list = evaluated.get_matter()
-	var/matsinitem = matter_list?.Copy()
-	for(var/obj/O in evaluated.GetAllContents()) // can now recycle empty shells to get at the contents
-		if(length(O.get_matter()))
-			matsinitem += O.get_matter()
-	if(length(matsinitem) < 1)
-		return FALSE
-	for(var/i in matsinitem)
-		if(!(i in silo.materials_supported)) // determine all materials are suitable
-			return FALSE // if it does not contain the right materials, it is not stored
-		var/material/mat = get_material_by_name(i)
-		var/obj/item/stack/material/M = mat.stack_type
-		valueofitem += initial(M.price_tag) * matsinitem[i]
-	saleworthy_items[evaluated] = valueofitem // add this to the list
-	. = TRUE // and store it
-
-
-/obj/machinery/amerecycler/proc/recycle_and_pay(obj/itemtorecycle)
-	var/combinedvalue = 0
-	var/list/stufftorecycle = list()
-	if(silo.stat & NOPOWER)
-		flick("recycle_screen_red", overlays[1])
-		return
-	else if(itemtorecycle)
-		stufftorecycle.Add(itemtorecycle)
-	else
-		stufftorecycle |= saleworthy_items
-	if(!length(stufftorecycle))
-		return
-	for(var/toadd in stufftorecycle)
-		combinedvalue += round(saleworthy_items[toadd] * 0.8) // 20% fee on vendor, rounded up.
-	if(!combinedvalue || combinedvalue > silo?.my_account.money) // can we afford it all?
-		flick("recycle_screen_red", overlays[1])
-		if(!BITTEST(wire_flags, WIRE_SPEAKER))
-			audible_message("[src] outputs \"Error: Funding Insufficient.\"")
-		return
-	var/list/combinedmats = list()
-	for(var/obj/item/getthisone in stufftorecycle)
-		var/list/matter_list = getthisone.get_matter()
-		var/list/matter = matter_list?.Copy()
-		for(var/obj/O in getthisone.GetAllContents()) // can now recycle empty shells to get at the contents
-			if(length(O.get_matter()))
-				matter += O.get_matter()
-		for(var/toadd in matter)
-			combinedmats[toadd] += matter[toadd]
-		var/sellvalue = saleworthy_items[getthisone] * 0.8 // 20% fee
-		sellvalue = round(sellvalue) // don't make it round and you won't lose your money
-		var/datum/transaction/T = new(-sellvalue, "", "Recycling payout for [getthisone.name]", src)
-		T.apply_to(silo.my_account)
-		qdel(getthisone) // we first add the item to the garbage queue
-
-	if(length(stufftorecycle) > 1)
-		saleworthy_items.Cut() // we melted it all, because we could afford it all.
-	else
-		saleworthy_items.Remove(stufftorecycle[1])
-	stufftorecycle = null // then we remove what should be the remaining references
-	playsound(loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 50, 1)
-	silo.addmaterial(combinedmats)
-	spawn_money(combinedvalue, loc)
-	use_power(vend_power_usage)
-	silo.updatesubsidy()
-	flick("recycle_vend", src)
-	update_icon()
-
-	if(combinedvalue < 50 && prob(10)) // selling less than around 32 sheets worth at a time is awfully small
-		speak("Ты бы еще консервных банок насобирал!")
-
 /obj/machinery/amerecycler/proc/recycle_and_output(obj/itemtorecycle)
 
 
@@ -324,12 +249,6 @@ var/global/list/active_RSS
 	return data
 
 /obj/machinery/amerecycler/ui_act(action, params)
-	. = ..()
-	if(get_dist(usr, src) > 1) // remote operation is not currently legal, if you want to allow a case, change this check.
-		. = TRUE
-	if(.)
-		return
-	if(silo && !(silo.stat & NOPOWER))
-		switch(action)
+
 
 
