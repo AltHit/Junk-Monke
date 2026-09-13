@@ -30966,7 +30966,7 @@
 /area/eris/hallway/main/section2)
 "bxR" = (
 /obj/machinery/light,
-/obj/machinery/amerecycler,
+/obj/machinery/silo_vendor,
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/hallway/main/section2)
 "bxS" = (
@@ -39665,7 +39665,7 @@
 /turf/wall/low/with_glass/smart,
 /area/eris/engineering/construction)
 "bSe" = (
-/obj/machinery/amerecycler,
+/obj/machinery/silo_vendor,
 /obj/machinery/alarm{
 	dir = 1;
 	pixel_y = -23
@@ -59329,7 +59329,7 @@
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/hallway/main/section4)
 "cQX" = (
-/obj/machinery/amerecycler,
+/obj/machinery/silo_vendor,
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/hallway/main/section4)
 "cQY" = (
@@ -105456,7 +105456,7 @@
 /turf/floor/reinforced/plasma,
 /area/eris/engineering/atmos)
 "umG" = (
-/obj/machinery/amerecycler,
+/obj/machinery/silo_vendor,
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/hallway/side/section3starboard)
 "uoJ" = (
