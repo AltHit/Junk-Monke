@@ -18,7 +18,7 @@
 	MATERIAL_GLASS = 0,
 	MATERIAL_PLASTEEL = 0,
 	MATERIAL_SILVER = 0,
-	MATERIAL_GOLD,
+	MATERIAL_GOLD = 0,
 	MATERIAL_PLASMA = 0,
 	MATERIAL_URANIUM = 0,
 	MATERIAL_DIAMOND = 0,
@@ -34,18 +34,19 @@
 		to_chat(user, "There's something inside already.")
 		return
 	if(!istype(I, /obj/item/stack/material/))
-			if(slot_inserted_item)
+		if(slot_inserted_item)
 			view() << "There's an item inside already mofo, "
-		view() << "No item inside. Inserting.
+			return
+		view() << "No item inside. Inserting."
 		insert_item(I, user)
-	adjust_material(I.get_material(), I.amount)
-	view() << "It's a material sheet. Added [material_type] to Silo in amount of [amount], list called available_materials"
-	qdel(I)
+	var/obj/item/stack/material/new_I = I
+	adjust_material(new_I.get_material(), new_I.amount)
+	view() << "It's a material sheet."
+	qdel(new_I)
 
 /obj/machinery/amesilo/proc/adjust_material(var/material_type, var/amount)
 	if(available_materials[material_type] + amount < 0)
 		return
-	if(material_type in available_materials)
 	available_materials[material_type] += amount
 	view() << "Added [material_type] to Silo in amount of [amount]"
 
